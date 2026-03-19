@@ -16,46 +16,56 @@ object GoldApiService {
         .readTimeout(15, TimeUnit.SECONDS)
         .build()
 
-    // Uses Yahoo Finance unofficial API — no key required
-    private const val URL =
-        "https://query1.finance.yahoo.com/v8/finance/chart/XAUUSD=X?interval=1d&range=1d"
+    // GC=F (Gold Futures) is reliably available; XAUUSD=X often returns 404
+    private val URLS = listOf(
+        "https://query2.finance.yahoo.com/v8/finance/chart/GC=F?interval=1d&range=5d",
+        "https://query1.finance.yahoo.com/v8/finance/chart/GC=F?interval=1d&range=5d"
+    )
 
     fun fetchGoldData(): GoldData? {
-        return try {
-            val request = Request.Builder()
-                .url(URL)
-                .addHeader("User-Agent", "Mozilla/5.0 (Android)")
-                .addHeader("Accept", "application/json")
-                .build()
-
-            val body = client.newCall(request).execute().use { it.body?.string() }
-                ?: return null
-
-            val meta = JSONObject(body)
-                .getJSONObject("chart")
-                .getJSONArray("result")
-                .getJSONObject(0)
-                .getJSONObject("meta")
-
-            val price = meta.getDouble("regularMarketPrice")
-            val prevClose = meta.optDouble("previousClose", price)
-            val high = meta.optDouble("regularMarketDayHigh", price)
-            val low = meta.optDouble("regularMarketDayLow", price)
-            val open = meta.optDouble("regularMarketOpen", price)
-            val changePct = if (prevClose != 0.0) ((price - prevClose) / prevClose) * 100.0 else 0.0
-
-            GoldData(
-                price = price,
-                dayHigh = high,
-                dayLow = low,
-                open = open,
-                previousClose = prevClose,
-                changePercent = changePct,
-                timestamp = System.currentTimeMillis()
-            )
-        } catch (e: Exception) {
-            null
+        for (url in URLS) {
+            try {
+                val data = fetchFromUrl(url)
+                if (data != null) return data
+            } catch (_: Exception) {}
         }
+        return null
+    }
+
+    private fun fetchFromUrl(url: String): GoldData? {
+        val request = Request.Builder()
+            .url(url)
+            .addHeader("User-Agent", "Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36")
+            .addHeader("Accept", "application/json, */*")
+            .addHeader("Referer", "https://finance.yahoo.com/")
+            .build()
+
+        val body = client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) return null
+            response.body?.string()
+        } ?: return null
+
+        val chart = JSONObject(body).getJSONObject("chart")
+        val resultArr = chart.optJSONArray("result") ?: return null
+        if (resultArr.length() == 0) return null
+        val meta = resultArr.getJSONObject(0).getJSONObject("meta")
+
+        val price = meta.getDouble("regularMarketPrice")
+        val prevClose = meta.optDouble("regularMarketPreviousClose", meta.optDouble("previousClose", price))
+        val high = meta.optDouble("regularMarketDayHigh", price)
+        val low = meta.optDouble("regularMarketDayLow", price)
+        val open = meta.optDouble("regularMarketOpen", prevClose)
+        val changePct = if (prevClose != 0.0) ((price - prevClose) / prevClose) * 100.0 else 0.0
+
+        return GoldData(
+            price = price,
+            dayHigh = high,
+            dayLow = low,
+            open = open,
+            previousClose = prevClose,
+            changePercent = changePct,
+            timestamp = System.currentTimeMillis()
+        )
     }
 
     fun formatPrice(price: Double): String {
