@@ -1,8 +1,10 @@
 package com.goldwidget
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
+import android.content.Intent
 import android.widget.RemoteViews
 import androidx.work.*
 import java.util.concurrent.TimeUnit
@@ -10,46 +12,62 @@ import java.util.concurrent.TimeUnit
 class SimpleGoldWidget : AppWidgetProvider() {
 
     override fun onUpdate(ctx: Context, mgr: AppWidgetManager, ids: IntArray) {
-        // Show loading placeholder immediately
         for (id in ids) {
             val views = RemoteViews(ctx.packageName, R.layout.widget_simple)
             views.setTextViewText(R.id.tv_price, "Loading…")
             views.setTextViewText(R.id.tv_change, "")
             views.setTextViewText(R.id.tv_updated, "")
+            views.setOnClickPendingIntent(R.id.btn_refresh, refreshPendingIntent(ctx))
             mgr.updateAppWidget(id, views)
         }
-        scheduleUpdates(ctx)
+        triggerRefresh(ctx)
     }
 
-    override fun onEnabled(ctx: Context) = scheduleUpdates(ctx)
+    override fun onEnabled(ctx: Context) {
+        schedulePeriodicUpdates(ctx)
+        triggerRefresh(ctx)
+    }
 
     override fun onDisabled(ctx: Context) {
-        // Only cancel if the detailed widget is also gone
         WorkManager.getInstance(ctx).cancelUniqueWork(WORK_NAME)
+    }
+
+    override fun onReceive(ctx: Context, intent: Intent) {
+        super.onReceive(ctx, intent)
+        if (intent.action == ACTION_REFRESH) {
+            triggerRefresh(ctx)
+        }
     }
 
     companion object {
         const val WORK_NAME = "gold_widget_refresh"
+        const val ACTION_REFRESH = "com.goldwidget.ACTION_REFRESH"
 
-        fun scheduleUpdates(ctx: Context) {
-            val constraints = Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build()
-
-            // Trigger an immediate fetch
-            val now = OneTimeWorkRequestBuilder<WidgetUpdateWorker>()
-                .setConstraints(constraints)
-                .build()
-
-            // Then refresh every 15 minutes (WorkManager minimum)
-            val periodic = PeriodicWorkRequestBuilder<WidgetUpdateWorker>(15, TimeUnit.MINUTES)
-                .setConstraints(constraints)
-                .build()
-
-            WorkManager.getInstance(ctx).apply {
-                enqueue(now)
-                enqueueUniquePeriodicWork(WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, periodic)
+        fun refreshPendingIntent(ctx: Context): PendingIntent {
+            val intent = Intent(ctx, SimpleGoldWidget::class.java).apply {
+                action = ACTION_REFRESH
             }
+            return PendingIntent.getBroadcast(
+                ctx, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+        }
+
+        fun triggerRefresh(ctx: Context) {
+            val work = OneTimeWorkRequestBuilder<WidgetUpdateWorker>()
+                .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+                .build()
+            WorkManager.getInstance(ctx).enqueue(work)
+        }
+
+        fun schedulePeriodicUpdates(ctx: Context) {
+            val periodic = PeriodicWorkRequestBuilder<WidgetUpdateWorker>(15, TimeUnit.MINUTES)
+                .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+                .build()
+            // UPDATE cancels + replaces any stale periodic job
+            WorkManager.getInstance(ctx).enqueueUniquePeriodicWork(
+                WORK_NAME, ExistingPeriodicWorkPolicy.UPDATE, periodic
+            )
         }
     }
 }

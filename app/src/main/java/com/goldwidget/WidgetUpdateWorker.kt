@@ -47,6 +47,7 @@ class WidgetUpdateWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, p
         views.setTextViewText(R.id.tv_change, GoldApiService.formatChangePct(data.changePercent))
         views.setTextColor(R.id.tv_change, changeColor(data.changePercent))
         views.setTextViewText(R.id.tv_updated, GoldApiService.formatTime(data.timestamp))
+        views.setOnClickPendingIntent(R.id.btn_refresh, SimpleGoldWidget.refreshPendingIntent(applicationContext))
         return views
     }
 
@@ -60,6 +61,7 @@ class WidgetUpdateWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, p
         views.setTextViewText(R.id.tv_open, GoldApiService.formatShortPrice(data.open))
         views.setTextViewText(R.id.tv_prev_close, GoldApiService.formatShortPrice(data.previousClose))
         views.setTextViewText(R.id.tv_updated, "Updated " + GoldApiService.formatTime(data.timestamp))
+        views.setOnClickPendingIntent(R.id.btn_refresh, DetailedGoldWidget.refreshPendingIntent(applicationContext))
         return views
     }
 }
