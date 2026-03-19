@@ -1,7 +1,9 @@
 package com.goldwidget
 
 data class GoldData(
-    val price: Double,
+    val price: Double,       // mid = (bid + ask) / 2
+    val bid: Double,
+    val ask: Double,
     val dayHigh: Double,
     val dayLow: Double,
     val open: Double,

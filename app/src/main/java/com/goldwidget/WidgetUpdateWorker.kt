@@ -10,7 +10,7 @@ import androidx.work.WorkerParameters
 class WidgetUpdateWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, params) {
 
     override fun doWork(): Result {
-        val data = GoldApiService.fetchGoldData() ?: return Result.retry()
+        val data = GoldApiService.fetchGoldData(applicationContext) ?: return Result.retry()
         updateSimpleWidgets(data)
         updateDetailedWidgets(data)
         return Result.success()
