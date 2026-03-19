@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="gold">#FFD700</color>
+    <color name="gold_dark">#B8860B</color>
+    <color name="price_up">#4CAF50</color>
+    <color name="price_down">#F44336</color>
+</resources>
