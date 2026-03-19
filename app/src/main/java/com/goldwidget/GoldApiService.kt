@@ -94,6 +94,16 @@ object GoldApiService {
         return "$sign%.2f%%".format(pct)
     }
 
+    fun formatChangeAbs(price: Double, prevClose: Double): String {
+        if (prevClose == 0.0) return ""
+        val diff = price - prevClose
+        val sign = if (diff >= 0) "+" else ""
+        val fmt = NumberFormat.getCurrencyInstance(Locale.US)
+        fmt.minimumFractionDigits = 2
+        fmt.maximumFractionDigits = 2
+        return "$sign${fmt.format(diff)}"
+    }
+
     fun formatTime(ts: Long): String =
         SimpleDateFormat("h:mm a", Locale.getDefault()).format(Date(ts))
 }

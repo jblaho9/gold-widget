@@ -6,7 +6,7 @@
     android:background="@drawable/widget_background"
     android:padding="14dp">
 
-    <!-- Header row -->
+    <!-- Header row: label + change pill + abs -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,8 +29,24 @@
             android:layout_height="wrap_content"
             android:text="+0.00%"
             android:textColor="@color/price_up"
-            android:textSize="11sp"
-            android:textStyle="bold" />
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:background="@drawable/pill_up"
+            android:paddingStart="7dp"
+            android:paddingEnd="7dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp" />
+
+        <TextView
+            android:id="@+id/tv_change_abs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/price_up_abs"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:layout_marginStart="6dp" />
+
     </LinearLayout>
 
     <!-- Main price -->
@@ -51,7 +67,7 @@
         android:textColor="#50FFFFFF"
         android:textSize="9sp" />
 
-    <!-- Divider: View is not in RemoteViews whitelist, use TextView -->
+    <!-- Divider -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -75,7 +91,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="HIGH"
-                android:textColor="#60FFFFFF"
+                android:textColor="#60FFD700"
                 android:textSize="8sp"
                 android:letterSpacing="0.1" />
             <TextView
@@ -98,7 +114,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="LOW"
-                android:textColor="#60FFFFFF"
+                android:textColor="#60FFD700"
                 android:textSize="8sp"
                 android:letterSpacing="0.1" />
             <TextView
@@ -121,7 +137,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="OPEN"
-                android:textColor="#60FFFFFF"
+                android:textColor="#60FFD700"
                 android:textSize="8sp"
                 android:letterSpacing="0.1" />
             <TextView
@@ -144,7 +160,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="PREV"
-                android:textColor="#60FFFFFF"
+                android:textColor="#60FFD700"
                 android:textSize="8sp"
                 android:letterSpacing="0.1" />
             <TextView

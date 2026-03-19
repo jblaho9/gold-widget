@@ -36,6 +36,15 @@
                 android:resource="@xml/widget_detailed_info" />
         </receiver>
 
+        <!-- Refresh widget on phone unlock -->
+        <receiver
+            android:name=".ScreenUnlockReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

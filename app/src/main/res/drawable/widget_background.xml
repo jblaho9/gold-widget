@@ -9,6 +9,6 @@
         android:endColor="#0C0B09"
         android:type="linear" />
     <stroke
-        android:width="0.5dp"
-        android:color="#50FFD700" />
+        android:width="1dp"
+        android:color="#73FFD700" />
 </shape>
