@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Outer coin rim (darker gold) -->
+    <path
+        android:fillColor="#C8960C"
+        android:pathData="M22,54 A32,32 0 1,0 86,54 A32,32 0 1,0 22,54 Z" />
+
+    <group>
+        <!-- Clip everything to coin face -->
+        <clip-path
+            android:pathData="M27,54 A27,27 0 1,0 81,54 A27,27 0 1,0 27,54 Z" />
+
+        <!-- Coin face -->
+        <path
+            android:fillColor="#FFD700"
+            android:pathData="M27,54 A27,27 0 1,0 81,54 A27,27 0 1,0 27,54 Z" />
+
+        <!-- Subtle shine at top of coin -->
+        <path
+            android:fillColor="#40FFFFFF"
+            android:pathData="M42,40 A12,5 0 1,0 66,40 A12,5 0 1,0 42,40 Z" />
+
+        <!-- Rising price chart line -->
+        <path
+            android:fillColor="#00000000"
+            android:strokeColor="#141210"
+            android:strokeWidth="3.5"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:pathData="M36,66 L47,53 L58,58 L70,40" />
+
+        <!-- Current price dot -->
+        <path
+            android:fillColor="#141210"
+            android:pathData="M66.5,40 A3.5,3.5 0 1,0 73.5,40 A3.5,3.5 0 1,0 66.5,40 Z" />
+    </group>
+
+</vector>
