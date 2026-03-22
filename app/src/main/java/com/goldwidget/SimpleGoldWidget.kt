@@ -32,12 +32,33 @@ class SimpleGoldWidget : AppWidgetProvider() {
         WorkManager.getInstance(ctx).cancelUniqueWork(WORK_NAME)
     }
 
+    override fun onReceive(ctx: Context, intent: Intent) {
+        super.onReceive(ctx, intent)
+        if (intent.action == ACTION_REFRESH) {
+            // goAsync() lets us do network I/O without WorkManager scheduling overhead.
+            // Safe because broadcast receivers run in background and goAsync() extends
+            // the window well beyond our 8s network timeout.
+            val result = goAsync()
+            Thread {
+                try {
+                    val data = GoldApiService.fetchGoldData(ctx)
+                    if (data != null) WidgetUpdateWorker.updateAllWidgets(ctx, data)
+                } finally {
+                    result.finish()
+                }
+            }.start()
+        }
+    }
+
     companion object {
         const val WORK_NAME = "gold_widget_refresh"
+        const val ACTION_REFRESH = "com.goldwidget.ACTION_REFRESH"
 
         fun refreshPendingIntent(ctx: Context): PendingIntent {
-            val intent = Intent(ctx, RefreshService::class.java)
-            return PendingIntent.getService(
+            val intent = Intent(ctx, SimpleGoldWidget::class.java).apply {
+                action = ACTION_REFRESH
+            }
+            return PendingIntent.getBroadcast(
                 ctx, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
