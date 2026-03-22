@@ -13,10 +13,10 @@ class SimpleGoldWidget : AppWidgetProvider() {
 
     override fun onUpdate(ctx: Context, mgr: AppWidgetManager, ids: IntArray) {
         for (id in ids) {
+            // Don't reset to "Loading…" — keep whatever is displayed and silently
+            // refresh in the background to avoid the flicker caused by onEnabled
+            // and onUpdate both firing on first add and queuing back-to-back jobs.
             val views = RemoteViews(ctx.packageName, R.layout.widget_simple)
-            views.setTextViewText(R.id.tv_price, "Loading…")
-            views.setTextViewText(R.id.tv_change, "")
-            views.setTextViewText(R.id.tv_updated, "")
             views.setOnClickPendingIntent(R.id.btn_refresh, refreshPendingIntent(ctx))
             mgr.updateAppWidget(id, views)
         }
