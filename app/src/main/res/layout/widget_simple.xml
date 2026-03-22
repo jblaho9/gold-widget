@@ -4,29 +4,44 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/widget_background"
-    android:padding="11dp">
+    android:padding="14dp"
+    android:gravity="center">
 
-    <!-- Header row: GOLD label left, change pill right -->
+    <!-- Header: label only -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="GOLD"
+        android:textColor="#FFD700"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.2"
+        android:gravity="center" />
+
+    <!-- Price -->
+    <TextView
+        android:id="@+id/tv_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="$0,000.00"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginTop="3dp" />
+
+    <!-- Change pill + market closed icon -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="GOLD"
-            android:textColor="#FFD700"
-            android:textSize="9sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.22" />
+        android:gravity="center"
+        android:layout_marginTop="4dp">
 
         <ImageView
             android:id="@+id/iv_market_closed"
-            android:layout_width="11dp"
-            android:layout_height="11dp"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
             android:src="@drawable/ic_pause"
             android:visibility="gone"
             android:layout_marginEnd="5dp" />
@@ -40,55 +55,48 @@
             android:textSize="9sp"
             android:textStyle="bold"
             android:background="@drawable/pill_up"
-            android:paddingStart="6dp"
-            android:paddingEnd="6dp"
+            android:paddingStart="7dp"
+            android:paddingEnd="7dp"
             android:paddingTop="2dp"
             android:paddingBottom="2dp" />
 
     </LinearLayout>
 
-    <!-- Price — tight below header -->
+    <!-- Sub-label -->
     <TextView
-        android:id="@+id/tv_price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="$0,000"
-        android:textColor="#FFFFFF"
-        android:textSize="36sp"
-        android:textStyle="bold"
-        android:includeFontPadding="false"
+        android:text="XAU/USD · per troy oz"
+        android:textColor="#60FFFFFF"
+        android:textSize="9sp"
+        android:gravity="center"
         android:layout_marginTop="2dp" />
-
-    <!-- Spacer -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
 
     <!-- Timestamp + refresh button -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center"
+        android:layout_marginTop="5dp">
 
         <TextView
             android:id="@+id/tv_updated"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="--:-- --"
-            android:textColor="#33FFFFFF"
-            android:textSize="7sp" />
+            android:textColor="#40FFFFFF"
+            android:textSize="8sp" />
 
         <ImageButton
             android:id="@+id/btn_refresh"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
             android:src="@drawable/ic_refresh"
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
-            android:padding="3dp" />
+            android:padding="3dp"
+            android:layout_marginStart="4dp" />
     </LinearLayout>
 
 </LinearLayout>
