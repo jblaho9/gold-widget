@@ -9,5 +9,6 @@ data class GoldData(
     val open: Double,
     val previousClose: Double,
     val changePercent: Double,
-    val timestamp: Long
+    val timestamp: Long,
+    val marketClosed: Boolean
 )

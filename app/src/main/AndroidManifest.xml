@@ -45,6 +45,11 @@
             </intent-filter>
         </receiver>
 
+        <!-- Lightweight service for on-demand refresh (bypasses WorkManager overhead) -->
+        <service
+            android:name=".RefreshService"
+            android:exported="false" />
+
     </application>
 
 </manifest>

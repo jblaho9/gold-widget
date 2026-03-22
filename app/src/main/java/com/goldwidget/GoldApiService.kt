@@ -5,15 +5,17 @@ import okhttp3.Request
 import org.json.JSONArray
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 
 object GoldApiService {
 
     private val client = OkHttpClient.Builder()
-        .connectTimeout(15, TimeUnit.SECONDS)
-        .readTimeout(15, TimeUnit.SECONDS)
+        .connectTimeout(8, TimeUnit.SECONDS)
+        .readTimeout(8, TimeUnit.SECONDS)
         .build()
 
     // Swissquote public spot feed — same source as cTrader liquidity providers
@@ -59,6 +61,10 @@ object GoldApiService {
             val changePct = if (stats.prevClose != 0.0)
                 ((price - stats.prevClose) / stats.prevClose) * 100.0 else 0.0
 
+            val now = System.currentTimeMillis()
+            ctx.getSharedPreferences("gold_widget", android.content.Context.MODE_PRIVATE)
+                .edit().putLong("last_fetch_ts", now).apply()
+
             GoldData(
                 price = price,
                 bid = bid,
@@ -68,7 +74,8 @@ object GoldApiService {
                 open = stats.open,
                 previousClose = stats.prevClose,
                 changePercent = changePct,
-                timestamp = System.currentTimeMillis()
+                timestamp = now,
+                marketClosed = isMarketClosed()
             )
         } catch (e: Exception) {
             null
@@ -94,16 +101,20 @@ object GoldApiService {
         return "$sign%.2f%%".format(pct)
     }
 
-    fun formatChangeAbs(price: Double, prevClose: Double): String {
-        if (prevClose == 0.0) return ""
-        val diff = price - prevClose
-        val sign = if (diff >= 0) "+" else ""
-        val fmt = NumberFormat.getCurrencyInstance(Locale.US)
-        fmt.minimumFractionDigits = 2
-        fmt.maximumFractionDigits = 2
-        return "$sign${fmt.format(diff)}"
-    }
-
     fun formatTime(ts: Long): String =
         SimpleDateFormat("h:mm a", Locale.getDefault()).format(Date(ts))
+
+    // XAU/USD trades Sun 5 PM ET → Fri 5 PM ET
+    fun isMarketClosed(): Boolean {
+        val cal = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"))
+        val dow = cal.get(Calendar.DAY_OF_WEEK)
+        val minutesInDay = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE)
+        val close = 17 * 60 // 5:00 PM
+        return when (dow) {
+            Calendar.SATURDAY -> true
+            Calendar.SUNDAY   -> minutesInDay < close
+            Calendar.FRIDAY   -> minutesInDay >= close
+            else              -> false
+        }
+    }
 }

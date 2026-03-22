@@ -32,22 +32,12 @@ class SimpleGoldWidget : AppWidgetProvider() {
         WorkManager.getInstance(ctx).cancelUniqueWork(WORK_NAME)
     }
 
-    override fun onReceive(ctx: Context, intent: Intent) {
-        super.onReceive(ctx, intent)
-        if (intent.action == ACTION_REFRESH) {
-            triggerRefresh(ctx)
-        }
-    }
-
     companion object {
         const val WORK_NAME = "gold_widget_refresh"
-        const val ACTION_REFRESH = "com.goldwidget.ACTION_REFRESH"
 
         fun refreshPendingIntent(ctx: Context): PendingIntent {
-            val intent = Intent(ctx, SimpleGoldWidget::class.java).apply {
-                action = ACTION_REFRESH
-            }
-            return PendingIntent.getBroadcast(
+            val intent = Intent(ctx, RefreshService::class.java)
+            return PendingIntent.getService(
                 ctx, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
@@ -64,7 +54,6 @@ class SimpleGoldWidget : AppWidgetProvider() {
             val periodic = PeriodicWorkRequestBuilder<WidgetUpdateWorker>(15, TimeUnit.MINUTES)
                 .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
                 .build()
-            // UPDATE cancels + replaces any stale periodic job
             WorkManager.getInstance(ctx).enqueueUniquePeriodicWork(
                 WORK_NAME, ExistingPeriodicWorkPolicy.UPDATE, periodic
             )

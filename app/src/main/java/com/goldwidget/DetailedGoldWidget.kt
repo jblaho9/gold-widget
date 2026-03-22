@@ -25,21 +25,10 @@ class DetailedGoldWidget : AppWidgetProvider() {
         SimpleGoldWidget.triggerRefresh(ctx)
     }
 
-    override fun onReceive(ctx: Context, intent: Intent) {
-        super.onReceive(ctx, intent)
-        if (intent.action == ACTION_REFRESH) {
-            SimpleGoldWidget.triggerRefresh(ctx)
-        }
-    }
-
     companion object {
-        const val ACTION_REFRESH = "com.goldwidget.ACTION_REFRESH_DETAILED"
-
         fun refreshPendingIntent(ctx: Context): PendingIntent {
-            val intent = Intent(ctx, DetailedGoldWidget::class.java).apply {
-                action = ACTION_REFRESH
-            }
-            return PendingIntent.getBroadcast(
+            val intent = Intent(ctx, RefreshService::class.java)
+            return PendingIntent.getService(
                 ctx, 1, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )

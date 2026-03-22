@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:background="@drawable/widget_background"
     android:padding="14dp"
-    android:gravity="center_vertical">
+    android:gravity="center">
 
     <!-- Header: label only -->
     <TextView
@@ -15,7 +15,8 @@
         android:textColor="#FFD700"
         android:textSize="10sp"
         android:textStyle="bold"
-        android:letterSpacing="0.2" />
+        android:letterSpacing="0.2"
+        android:gravity="center" />
 
     <!-- Price -->
     <TextView
@@ -26,15 +27,24 @@
         android:textColor="#FFFFFF"
         android:textSize="28sp"
         android:textStyle="bold"
+        android:gravity="center"
         android:layout_marginTop="3dp" />
 
-    <!-- Change pill + absolute change -->
+    <!-- Change pill + market closed icon -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:layout_marginTop="4dp">
+
+        <ImageView
+            android:id="@+id/iv_market_closed"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:src="@drawable/ic_pause"
+            android:visibility="gone"
+            android:layout_marginEnd="5dp" />
 
         <TextView
             android:id="@+id/tv_change"
@@ -50,16 +60,6 @@
             android:paddingTop="2dp"
             android:paddingBottom="2dp" />
 
-        <TextView
-            android:id="@+id/tv_change_abs"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="@color/price_up_abs"
-            android:textSize="9sp"
-            android:textStyle="bold"
-            android:layout_marginStart="6dp" />
-
     </LinearLayout>
 
     <!-- Sub-label -->
@@ -69,6 +69,7 @@
         android:text="XAU/USD · per troy oz"
         android:textColor="#60FFFFFF"
         android:textSize="9sp"
+        android:gravity="center"
         android:layout_marginTop="2dp" />
 
     <!-- Timestamp + refresh button -->
@@ -76,14 +77,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:layout_marginTop="5dp">
 
         <TextView
             android:id="@+id/tv_updated"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="--:-- --"
             android:textColor="#40FFFFFF"
             android:textSize="8sp" />
@@ -95,7 +95,8 @@
             android:src="@drawable/ic_refresh"
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
-            android:padding="3dp" />
+            android:padding="3dp"
+            android:layout_marginStart="4dp" />
     </LinearLayout>
 
 </LinearLayout>
