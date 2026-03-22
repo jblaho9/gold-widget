@@ -10,9 +10,15 @@ import android.widget.RemoteViews
 class DetailedGoldWidget : AppWidgetProvider() {
 
     override fun onUpdate(ctx: Context, mgr: AppWidgetManager, ids: IntArray) {
+        val cached = WidgetUpdateWorker.loadCache(ctx)
         for (id in ids) {
-            val views = RemoteViews(ctx.packageName, R.layout.widget_detailed)
-            views.setOnClickPendingIntent(R.id.btn_refresh, refreshPendingIntent(ctx))
+            val views = if (cached != null)
+                WidgetUpdateWorker.buildDetailedViews(ctx, cached)
+            else {
+                RemoteViews(ctx.packageName, R.layout.widget_detailed).also {
+                    it.setOnClickPendingIntent(R.id.btn_refresh, refreshPendingIntent(ctx))
+                }
+            }
             mgr.updateAppWidget(id, views)
         }
         SimpleGoldWidget.triggerRefresh(ctx)

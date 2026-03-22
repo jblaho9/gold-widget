@@ -12,12 +12,15 @@ import java.util.concurrent.TimeUnit
 class SimpleGoldWidget : AppWidgetProvider() {
 
     override fun onUpdate(ctx: Context, mgr: AppWidgetManager, ids: IntArray) {
+        val cached = WidgetUpdateWorker.loadCache(ctx)
         for (id in ids) {
-            // Don't reset to "Loading…" — keep whatever is displayed and silently
-            // refresh in the background to avoid the flicker caused by onEnabled
-            // and onUpdate both firing on first add and queuing back-to-back jobs.
-            val views = RemoteViews(ctx.packageName, R.layout.widget_simple)
-            views.setOnClickPendingIntent(R.id.btn_refresh, refreshPendingIntent(ctx))
+            val views = if (cached != null)
+                WidgetUpdateWorker.buildSimpleViews(ctx, cached)
+            else {
+                RemoteViews(ctx.packageName, R.layout.widget_simple).also {
+                    it.setOnClickPendingIntent(R.id.btn_refresh, refreshPendingIntent(ctx))
+                }
+            }
             mgr.updateAppWidget(id, views)
         }
         triggerRefresh(ctx)

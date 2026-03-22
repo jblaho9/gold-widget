@@ -18,7 +18,41 @@ class WidgetUpdateWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, p
 
     companion object {
 
+        private const val CACHE_PREFS = "gold_widget_cache"
+
+        fun saveCache(ctx: Context, data: GoldData) {
+            ctx.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE).edit()
+                .putFloat("price",       data.price.toFloat())
+                .putFloat("change_pct",  data.changePercent.toFloat())
+                .putFloat("high",        data.dayHigh.toFloat())
+                .putFloat("low",         data.dayLow.toFloat())
+                .putFloat("open",        data.open.toFloat())
+                .putFloat("prev",        data.previousClose.toFloat())
+                .putBoolean("market_closed", data.marketClosed)
+                .putLong("timestamp",    data.timestamp)
+                .apply()
+        }
+
+        fun loadCache(ctx: Context): GoldData? {
+            val p = ctx.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE)
+            val price = p.getFloat("price", 0f).toDouble()
+            if (price == 0.0) return null
+            return GoldData(
+                price          = price,
+                bid            = price,
+                ask            = price,
+                dayHigh        = p.getFloat("high",  price.toFloat()).toDouble(),
+                dayLow         = p.getFloat("low",   price.toFloat()).toDouble(),
+                open           = p.getFloat("open",  price.toFloat()).toDouble(),
+                previousClose  = p.getFloat("prev",  price.toFloat()).toDouble(),
+                changePercent  = p.getFloat("change_pct", 0f).toDouble(),
+                timestamp      = p.getLong("timestamp", System.currentTimeMillis()),
+                marketClosed   = p.getBoolean("market_closed", false)
+            )
+        }
+
         fun updateAllWidgets(ctx: Context, data: GoldData) {
+            saveCache(ctx, data)
             val mgr = AppWidgetManager.getInstance(ctx)
 
             val simpleIds = mgr.getAppWidgetIds(ComponentName(ctx, SimpleGoldWidget::class.java))
