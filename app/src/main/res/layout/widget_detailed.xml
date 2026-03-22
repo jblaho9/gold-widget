@@ -4,9 +4,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/widget_background"
-    android:padding="14dp">
+    android:padding="12dp">
 
-    <!-- Header row: label + market closed icon + change pill -->
+    <!-- Header: GOLD left, pill right -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,11 +17,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="GOLD · XAU/USD"
+            android:text="GOLD"
             android:textColor="#FFD700"
             android:textSize="10sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.15" />
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/iv_market_closed"
@@ -37,49 +36,46 @@
             android:layout_height="wrap_content"
             android:text="+0.00%"
             android:textColor="@color/price_up"
-            android:textSize="9sp"
+            android:textSize="10sp"
             android:textStyle="bold"
             android:background="@drawable/pill_up"
-            android:paddingStart="7dp"
-            android:paddingEnd="7dp"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp" />
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp" />
 
     </LinearLayout>
 
-    <!-- Main price -->
+    <!-- Price — big, left-aligned -->
     <TextView
         android:id="@+id/tv_price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="$0,000.00"
         android:textColor="#FFFFFF"
-        android:textSize="34sp"
+        android:textSize="36sp"
         android:textStyle="bold"
-        android:layout_marginTop="1dp" />
+        android:layout_marginTop="2dp" />
 
+    <!-- Flexible spacer -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="per troy ounce"
-        android:textColor="#50FFFFFF"
-        android:textSize="9sp" />
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
-    <!-- Divider -->
+    <!-- Hairline divider -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#25FFD700"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp" />
+        android:background="#30FFD700"
+        android:layout_marginBottom="5dp" />
 
-    <!-- Stats row: High / Low / Open / Prev Close -->
+    <!-- Stats row -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <!-- High -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -90,8 +86,7 @@
                 android:layout_height="wrap_content"
                 android:text="HIGH"
                 android:textColor="#60FFD700"
-                android:textSize="8sp"
-                android:letterSpacing="0.1" />
+                android:textSize="7sp" />
             <TextView
                 android:id="@+id/tv_high"
                 android:layout_width="wrap_content"
@@ -102,7 +97,6 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Low -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -113,8 +107,7 @@
                 android:layout_height="wrap_content"
                 android:text="LOW"
                 android:textColor="#60FFD700"
-                android:textSize="8sp"
-                android:letterSpacing="0.1" />
+                android:textSize="7sp" />
             <TextView
                 android:id="@+id/tv_low"
                 android:layout_width="wrap_content"
@@ -125,7 +118,6 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Open -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -136,8 +128,7 @@
                 android:layout_height="wrap_content"
                 android:text="OPEN"
                 android:textColor="#60FFD700"
-                android:textSize="8sp"
-                android:letterSpacing="0.1" />
+                android:textSize="7sp" />
             <TextView
                 android:id="@+id/tv_open"
                 android:layout_width="wrap_content"
@@ -148,7 +139,6 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Prev Close -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -159,8 +149,7 @@
                 android:layout_height="wrap_content"
                 android:text="PREV"
                 android:textColor="#60FFD700"
-                android:textSize="8sp"
-                android:letterSpacing="0.1" />
+                android:textSize="7sp" />
             <TextView
                 android:id="@+id/tv_prev_close"
                 android:layout_width="wrap_content"
@@ -173,13 +162,13 @@
 
     </LinearLayout>
 
-    <!-- Updated time + refresh button -->
+    <!-- Footer: time left, refresh right -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginTop="6dp">
+        android:layout_marginTop="4dp">
 
         <TextView
             android:id="@+id/tv_updated"
@@ -198,6 +187,7 @@
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
             android:padding="3dp" />
+
     </LinearLayout>
 
 </LinearLayout>

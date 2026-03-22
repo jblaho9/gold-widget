@@ -4,39 +4,23 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/widget_background"
-    android:padding="14dp"
-    android:gravity="center">
+    android:padding="12dp">
 
-    <!-- Header: label only -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="GOLD"
-        android:textColor="#FFD700"
-        android:textSize="10sp"
-        android:textStyle="bold"
-        android:letterSpacing="0.2"
-        android:gravity="center" />
-
-    <!-- Price -->
-    <TextView
-        android:id="@+id/tv_price"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="$0,000.00"
-        android:textColor="#FFFFFF"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginTop="3dp" />
-
-    <!-- Change pill + market closed icon -->
+    <!-- Header: GOLD left, pill right -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginTop="4dp">
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="GOLD"
+            android:textColor="#FFD700"
+            android:textSize="10sp"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/iv_market_closed"
@@ -52,38 +36,45 @@
             android:layout_height="wrap_content"
             android:text="+0.00%"
             android:textColor="@color/price_up"
-            android:textSize="9sp"
+            android:textSize="10sp"
             android:textStyle="bold"
             android:background="@drawable/pill_up"
-            android:paddingStart="7dp"
-            android:paddingEnd="7dp"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp" />
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp" />
 
     </LinearLayout>
 
-    <!-- Sub-label -->
+    <!-- Price — big, left-aligned -->
     <TextView
+        android:id="@+id/tv_price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="XAU/USD · per troy oz"
-        android:textColor="#60FFFFFF"
-        android:textSize="9sp"
-        android:gravity="center"
+        android:text="$0,000"
+        android:textColor="#FFFFFF"
+        android:textSize="38sp"
+        android:textStyle="bold"
         android:layout_marginTop="2dp" />
 
-    <!-- Timestamp + refresh button -->
+    <!-- Flexible spacer -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Footer: time left, refresh right -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginTop="5dp">
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/tv_updated"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="--:-- --"
             android:textColor="#40FFFFFF"
             android:textSize="8sp" />
@@ -95,8 +86,8 @@
             android:src="@drawable/ic_refresh"
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
-            android:padding="3dp"
-            android:layout_marginStart="4dp" />
+            android:padding="3dp" />
+
     </LinearLayout>
 
 </LinearLayout>
