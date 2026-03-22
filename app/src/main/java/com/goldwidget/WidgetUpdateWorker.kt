@@ -30,7 +30,7 @@ class WidgetUpdateWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, p
                 .putFloat("prev",        data.previousClose.toFloat())
                 .putBoolean("market_closed", data.marketClosed)
                 .putLong("timestamp",    data.timestamp)
-                .apply()
+                .commit() // synchronous — must be readable immediately by onUpdate
         }
 
         fun loadCache(ctx: Context): GoldData? {

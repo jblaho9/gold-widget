@@ -12,14 +12,13 @@ class DetailedGoldWidget : AppWidgetProvider() {
     override fun onUpdate(ctx: Context, mgr: AppWidgetManager, ids: IntArray) {
         val cached = WidgetUpdateWorker.loadCache(ctx)
         for (id in ids) {
-            val views = if (cached != null)
-                WidgetUpdateWorker.buildDetailedViews(ctx, cached)
-            else {
-                RemoteViews(ctx.packageName, R.layout.widget_detailed).also {
-                    it.setOnClickPendingIntent(R.id.btn_refresh, refreshPendingIntent(ctx))
-                }
+            if (cached != null) {
+                mgr.updateAppWidget(id, WidgetUpdateWorker.buildDetailedViews(ctx, cached))
+            } else {
+                val clickOnly = RemoteViews(ctx.packageName, R.layout.widget_detailed)
+                clickOnly.setOnClickPendingIntent(R.id.btn_refresh, refreshPendingIntent(ctx))
+                mgr.partiallyUpdateAppWidget(id, clickOnly)
             }
-            mgr.updateAppWidget(id, views)
         }
         SimpleGoldWidget.triggerRefresh(ctx)
         SimpleGoldWidget.schedulePeriodicUpdates(ctx)

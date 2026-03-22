@@ -14,14 +14,16 @@ class SimpleGoldWidget : AppWidgetProvider() {
     override fun onUpdate(ctx: Context, mgr: AppWidgetManager, ids: IntArray) {
         val cached = WidgetUpdateWorker.loadCache(ctx)
         for (id in ids) {
-            val views = if (cached != null)
-                WidgetUpdateWorker.buildSimpleViews(ctx, cached)
-            else {
-                RemoteViews(ctx.packageName, R.layout.widget_simple).also {
-                    it.setOnClickPendingIntent(R.id.btn_refresh, refreshPendingIntent(ctx))
-                }
+            if (cached != null) {
+                // Restore last known price — no visible flicker
+                mgr.updateAppWidget(id, WidgetUpdateWorker.buildSimpleViews(ctx, cached))
+            } else {
+                // First-ever launch: wire up the click handler without touching
+                // the text views so the display isn't wiped to $0,000
+                val clickOnly = RemoteViews(ctx.packageName, R.layout.widget_simple)
+                clickOnly.setOnClickPendingIntent(R.id.btn_refresh, refreshPendingIntent(ctx))
+                mgr.partiallyUpdateAppWidget(id, clickOnly)
             }
-            mgr.updateAppWidget(id, views)
         }
         triggerRefresh(ctx)
     }
@@ -71,7 +73,12 @@ class SimpleGoldWidget : AppWidgetProvider() {
             val work = OneTimeWorkRequestBuilder<WidgetUpdateWorker>()
                 .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
                 .build()
-            WorkManager.getInstance(ctx).enqueue(work)
+            // KEEP: if a job is already queued/running, don't queue another one.
+            // Prevents onEnabled + onUpdate both firing at first add from creating
+            // two simultaneous fetch jobs.
+            WorkManager.getInstance(ctx).enqueueUniqueWork(
+                "gold_refresh_once", ExistingWorkPolicy.KEEP, work
+            )
         }
 
         fun schedulePeriodicUpdates(ctx: Context) {
