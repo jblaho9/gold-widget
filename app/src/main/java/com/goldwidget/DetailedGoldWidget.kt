@@ -20,8 +20,16 @@ class DetailedGoldWidget : AppWidgetProvider() {
                 mgr.partiallyUpdateAppWidget(id, clickOnly)
             }
         }
-        SimpleGoldWidget.triggerRefresh(ctx)
         SimpleGoldWidget.schedulePeriodicUpdates(ctx)
+        val pending = goAsync()
+        Thread {
+            try {
+                val data = GoldApiService.fetchGoldData(ctx)
+                if (data != null) WidgetUpdateWorker.updateAllWidgets(ctx, data)
+            } finally {
+                pending.finish()
+            }
+        }.start()
     }
 
     override fun onEnabled(ctx: Context) {

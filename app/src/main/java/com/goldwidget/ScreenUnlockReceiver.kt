@@ -10,7 +10,15 @@ class ScreenUnlockReceiver : BroadcastReceiver() {
             val prefs = ctx.getSharedPreferences("gold_widget", Context.MODE_PRIVATE)
             val lastFetch = prefs.getLong("last_fetch_ts", 0L)
             if (System.currentTimeMillis() - lastFetch >= 60_000L) {
-                SimpleGoldWidget.triggerRefresh(ctx)
+                val result = goAsync()
+                Thread {
+                    try {
+                        val data = GoldApiService.fetchGoldData(ctx)
+                        if (data != null) WidgetUpdateWorker.updateAllWidgets(ctx, data)
+                    } finally {
+                        result.finish()
+                    }
+                }.start()
             }
         }
     }

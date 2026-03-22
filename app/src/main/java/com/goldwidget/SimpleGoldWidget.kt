@@ -12,20 +12,29 @@ import java.util.concurrent.TimeUnit
 class SimpleGoldWidget : AppWidgetProvider() {
 
     override fun onUpdate(ctx: Context, mgr: AppWidgetManager, ids: IntArray) {
+        // Restore cache immediately so there's no blank/stale flash
         val cached = WidgetUpdateWorker.loadCache(ctx)
         for (id in ids) {
             if (cached != null) {
-                // Restore last known price — no visible flicker
                 mgr.updateAppWidget(id, WidgetUpdateWorker.buildSimpleViews(ctx, cached))
             } else {
-                // First-ever launch: wire up the click handler without touching
-                // the text views so the display isn't wiped to $0,000
                 val clickOnly = RemoteViews(ctx.packageName, R.layout.widget_simple)
                 clickOnly.setOnClickPendingIntent(R.id.btn_refresh, refreshPendingIntent(ctx))
                 mgr.partiallyUpdateAppWidget(id, clickOnly)
             }
         }
-        triggerRefresh(ctx)
+        // Fetch directly on a thread instead of via WorkManager — MIUI/Xiaomi
+        // aggressively restricts WorkManager background jobs so they fire late or
+        // not at all, causing the widget to flicker between cached and blank state.
+        val pending = goAsync()
+        Thread {
+            try {
+                val data = GoldApiService.fetchGoldData(ctx)
+                if (data != null) WidgetUpdateWorker.updateAllWidgets(ctx, data)
+            } finally {
+                pending.finish()
+            }
+        }.start()
     }
 
     override fun onEnabled(ctx: Context) {
