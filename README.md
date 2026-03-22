@@ -17,7 +17,7 @@ Both widgets auto-refresh every 15 minutes when connected to the internet.
 
 ## Install (pre-built APK)
 
-1. Download [`app-debug.apk`](app/build/outputs/apk/debug/app-debug.apk)
+1. Download [`gold-price-widget-debug.apk`](app/build/outputs/apk/debug/gold-price-widget-debug.apk)
 2. On your Android phone go to **Settings → Security → Install unknown apps** and allow your browser/file manager
 3. Open the APK and install
 4. Long-press your home screen → **Widgets** → search **Gold** → drag a widget onto the screen
@@ -40,7 +40,7 @@ cd gold-widget
 export ANDROID_HOME=~/android-sdk   # path to your Android SDK
 
 ./gradlew assembleDebug
-# APK → app/build/outputs/apk/debug/app-debug.apk
+# APK → app/build/outputs/apk/debug/gold-price-widget-debug.apk
 ```
 
 ## Project structure
