@@ -47,25 +47,29 @@
 
     </LinearLayout>
 
-    <!-- Main price -->
+    <!-- Main price — tight below header -->
     <TextView
         android:id="@+id/tv_price"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:text="$0,000.00"
         android:textColor="#FFFFFF"
         android:textSize="34sp"
         android:textStyle="bold"
-        android:gravity="bottom"
-        android:includeFontPadding="false" />
+        android:includeFontPadding="false"
+        android:layout_marginTop="2dp" />
+
+    <!-- Spacer -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
     <!-- Hairline divider -->
-    <TextView
+    <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="#33FFD700"
-        android:layout_marginTop="6dp"
         android:layout_marginBottom="5dp" />
 
     <!-- Stats row: High / Low / Open / Prev Close -->
